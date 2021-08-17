@@ -8,14 +8,14 @@
 export default {
   data () {
     return {
-      msg: 'hello vue!'
+      msg: 'hello vue!!'
     }
   }
 }
 </script>
 <!--lang='scss' scss 문법사용 -->
 <style scoped lang='scss'>
-$color: red;
+$color: blue;
 h1 {
   //color: red;
   color:$color;

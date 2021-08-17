@@ -12,7 +12,7 @@ module.exports = {
         node:TRUE
     },
     extends: [
-        'standard',//자바스크립트 표준스타일로 검사하겠ㄴ다
+        'standard',//자바스크립트 표준스타일로 검사하겠다
         'plugin:vue/essential'//뷰 규칙
 
     ],

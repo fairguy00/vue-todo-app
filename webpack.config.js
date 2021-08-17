@@ -84,14 +84,13 @@ module.exports = (env, opts) => { //opts 개발용인지 제품용인지
       new HtmlWebpackPlugin({
         template: path.join(__dirname, 'index.html')
       }),
-      new CopyPlugin({
-        patterns: [
+      new CopyPlugin([
           {
             from: 'assets/', //이플러그인은 특정 디렉터리 파일들을 어딘가 넣어주는 역할
             to: ''
           }
         ]
-      })
+      )
 
     ]
     //구조 -- 모듈 > plugins -- 결과

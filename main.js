@@ -9,10 +9,10 @@ import App from './App'
 //뷰인스턴스에 대한 설정
 new Vue({
   el: '#app',
-  render (createElement) { //createElement 콜백함수
-    return createElement(App)
-  }//아래두가지와 같다
-  //render: h => h(App) //에로우펑션에서 h는 createElement의 축약형
+  //render (createElement) { //createElement 콜백함수
+  //  return createElement(App)
+  //}//아래두가지와 같다
+  render: h => h(App) //에로우펑션에서 h는 createElement의 축약형
   //render:(h) => {
   //  return h(App)
   //}
