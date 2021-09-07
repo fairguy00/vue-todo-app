@@ -1,0 +1,44 @@
+<template>
+    <div>
+        <buttion @click="createTodo">추가</buttion>
+        <!-- 작성순서 1. 바인딩된속성 2.일반속성 3.이벤트 -->
+        <input 
+            :value="title"
+            type="text"
+            :placeholder="placeholder"
+            @input="title = $event.target.value"
+            @keypress.enter="createTodo"
+        />
+    </div>
+<!-- v-model 은 한글처리가 힘들다 > @input="title = $event.target.value" 로 우회-->
+</template>
+
+<script>
+export default {
+    data(){
+        return{
+            title: '',
+            placeholder: '할 일을 추가하세요!'
+        }
+    },
+    methods:{
+        createTodo(){
+            const validatedTitle = this.title && this.title.trim()
+            if(!validatedTitle){
+                alert('유효하지않은 타이틀입니다')
+                this.title = this.title.trim()
+                return;
+            }
+
+            console.log(this.title)
+            this.$emit('create-todo',this.title)//부모컴포넌트에 특정이벤트를 올려줌 케밥케이스
+            this.title=''
+
+        }
+    }
+}
+</script>
+
+<style>
+
+</style>

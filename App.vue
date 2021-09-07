@@ -1,24 +1,14 @@
 <template>
-  <h1>
-    {{ msg }}
-  </h1>
+<!-- 케밥케이스로 -->
+  <todo-app/>
 </template>
-
 <script>
+import TodoApp from './components/TodoApp'
 export default {
-  data () {
-    return {
-      msg: 'hello vue!!'
-    }
+  components:{
+    //'todo-app': TodoApp 
+    //TodoApp: TodoApp // 속성명하고 값이 같으면 생략가능
+    TodoApp
   }
 }
 </script>
-<!--lang='scss' scss 문법사용 -->
-<style scoped lang='scss'>
-$color: blue;
-h1 {
-  //color: red;
-  color:$color;
-  display:flex;
-}
-</style>
