@@ -1,6 +1,6 @@
 <template>
     <div>
-        <buttion @click="createTodo">추가</buttion>
+        <button @click="createTodo">추가</button>
         <!-- 작성순서 1. 바인딩된속성 2.일반속성 3.이벤트 -->
         <input 
             :value="title"
