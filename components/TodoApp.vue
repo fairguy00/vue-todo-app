@@ -26,6 +26,11 @@ import LocalStorage from 'lowdb/adapters/LocalStorage' // lowdb 와 로컬스토
 import cryptoRandomString from 'crypto-random-string'
 import _cloneDeep from 'lodash/cloneDeep'
 //import _ from 'lodash'
+import _find from 'lodash/find'
+import _findIndex from 'lodash/findIndex'
+
+import _assign from 'lodash/assign'
+import _remove from 'lodash/remove'
 import TodoCreator from './TodoCreator'
 import TodoItem from './TodoItem'
 
@@ -33,11 +38,11 @@ export default {
     props:{
         todo: Object
     },
-    data(){
-        return{
-            isEditMode: false
-        }
-    },
+    // data(){
+    //     return{
+    //         isEditMode: false
+    //     }
+    // },
     components:{
         TodoCreator,
         TodoItem
@@ -81,16 +86,37 @@ export default {
                 updatedAt:new Date(),
                 done: false
             }
+
+            // Create DB
             this.db
                 .get('todos')//lodash
                 .push(newTodo) //lodash
                 .write()//lowdb
+            
+            // Create Client
+            this.todos.push(newTodo)
         },
-        updateTodo(){
-            console.log('updateTodo!')
+        updateTodo(todo, value){
+            this.db
+                .get('todos')
+                .find({id:todo.id})
+                .assign(value)//갱신
+                .write()//로대시에서 실제로 갱신할때 write로 마무리
+            //실제 어플리캐이션의 todos도 갱신
+            const foundTodo = _find(this.todos, {id:todo.id})
+            Object.assign(foundTodo, value)//자바스크립트 네이티브 메서드 Object.assign 로 병합
+            _assign(foundTodo, value)
         },
-        deleteTodo(){
-            console.log('deleteTodo!') 
+        deleteTodo(todo){
+            this.db
+                .get('todos')
+                .remove({id:todo.id})
+                .write()
+            
+            //_remove(this.todos, {id:todo.id})//이코드만 있으면 반응성이 없어 화면엔 갱신이 안된다
+            //삭제하기위해 Vue.delete(지울객체, 인덱스)사용
+            const foundIndex = _findIndex(this.todos,{id:todo.id})
+            this.$delete(this.todos,foundIndex)
         }
     }
 }

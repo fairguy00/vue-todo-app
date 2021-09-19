@@ -1,5 +1,7 @@
 <template>
-    <div class="todo-item">
+    <div 
+        :class="{done:done}"
+        class="todo-item">
 
         <div 
             v-if="isEditMode"
@@ -66,7 +68,7 @@ export default {
     data(){
         return{
             isEditMode: false,
-            editedTitle:'' //수정하다가 취소하고 싶을경우 필요한 변수 todo.title 대신
+            editedTitle: this.todo.title //수정하다가 취소하고 싶을경우 필요한 변수 todo.title 대신
         }
     },
     computed:{
@@ -76,7 +78,7 @@ export default {
             },
             set(done){ //done 이라는 매개변수로 변경된값을 받아옴
                 this.updateTodo({
-                    done: done
+                    done
                 })
             }
         },
@@ -87,7 +89,7 @@ export default {
             if(isSame){
                 return date.format('YYYY년 MM월 DD일')
             }else{
-                return `${data.format('YYYY년 MM월 DD일')} (edited)` 
+                return `${date.format('YYYY년 MM월 DD일')} (edited)` 
             }
             
         }
@@ -100,6 +102,9 @@ export default {
                 updatedAt: new Date()
                 })
             }
+            // 수정 모드 종료.
+            this.offEditMode()
+            
         },
         onEditMode(){
             this.isEditMode = true
@@ -112,12 +117,31 @@ export default {
         offEditMode(){
             this.isEditMode = false
         },
-        updateTodo(value){ //특정값을 받아 부모컴포넌트인 todoapp로 넘겨준다- $emit 상위컴포넌트에 있는 메서드르리 실행하기위한
+        updateTodo(value){ //특정값을 받아 부모컴포넌트인 todoapp로 넘겨준다- $emit 상위컴포넌트에 있는 메서드르리 실행하기위한('이벤트이름', 부모로 올라갈데이터, 갱신할값)
             this.$emit('update-todo', this.todo, value)
         },
-        deleteTodo(){
+        deleteTodo(){//상위컴포넌트를 통해서 delete-todo 이벤트 이름으로 this.todo와 같이 데이터로 로 올려줌
             this.$emit('delete-todo',this.todo)
         }
     }
 }
+//style scoped 현재 내에서만 사용함
+//&.done 자기자신에 done 이라는 클래스
 </script>
+ 
+<style scoped lang='scss'>
+    .todo-item{
+        margin-bottom: 10px;
+        .item__inner{
+            display: flex;
+        }
+        .item__date{
+            font-size:12px;
+        }
+        &.done{
+            .item__title{
+                text-decoration: line-through;
+            }
+        }
+    }
+</style>
