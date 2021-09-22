@@ -17,22 +17,31 @@
                 @keypress.esc="offEditMode"
             />
             <div class="item__actions">
-                <button 
+                <button
+                    class="btn btn--primary"
                     key="complete"
-                    @click="editedTodo">완료</button>
-                <button 
+                    @click="editedTodo">
+                    <i class="material-icons">done</i>
+                </button>
+                <button
+                    class="btn"
                     key="cancel"
-                    @click="offEditMode">취소</button>
+                    @click="offEditMode">
+                    <i class="material-icons">clear</i>
+                </button>
             </div>    
         </div>
         <div 
             v-else
             class="item__inner item--normal">
 
-            <input
-            v-model="done"
-            type="checkbox"
-            />
+            <label>
+                <input
+                    v-model="done"
+                    type="checkbox"
+                />
+                <span class="icon"><i class="material-icons">check</i></span>
+            </label>
             <div class="item__title-wrap">
                 <div class="item__title">
                     {{todo.title}}
@@ -46,11 +55,17 @@
                 이를 방지하기위해 요소에 key속성을 추가한다 -->
             <div class="item__actions"> 
                 <button 
+                    class="btn"
                     key="update" 
-                    @click="onEditMode">수정</button>
+                    @click="onEditMode">
+                    <i class="material-icons">edit</i>
+                </button>
                 <button
+                    class="btn btn--danger"
                     key="delete" 
-                    @click="deleteTodo">삭제</button>
+                    @click="deleteTodo">
+                    <i class="material-icons">delete</i>
+                </button>
             </div>
 
         </div>
@@ -128,20 +143,3 @@ export default {
 //style scoped 현재 내에서만 사용함
 //&.done 자기자신에 done 이라는 클래스
 </script>
- 
-<style scoped lang='scss'>
-    .todo-item{
-        margin-bottom: 10px;
-        .item__inner{
-            display: flex;
-        }
-        .item__date{
-            font-size:12px;
-        }
-        &.done{
-            .item__title{
-                text-decoration: line-through;
-            }
-        }
-    }
-</style>

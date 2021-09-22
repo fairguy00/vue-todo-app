@@ -1,21 +1,54 @@
 <template>
+
     <!-- 브라우저 local storage -- 쿠키삭제 같은게 아닌 반영구적인 저장소 
          - Lowdb 라이브러리로 활용 lodash lib(배열,객체, 문자열 다루는 lib) 딸려들어옴
          - npm i lodash@^4 lowdb@^1 
     -->
     <!-- 브라우저 session storage 브라우저 종료하면 날아가는 일시적인-->
     <!-- 템플릿태그안에는 자식요소가하나만 들어강 -->
-    <div>
-        <todo-item
-            v-for="todo in todos"
+    <div class="todo-app">
+        <div class="todo-app__actions">
+            <div class="filters">
+                <button 
+                    :class="{active:filter ==='all'}"
+                    @click="changeFilter('all')">
+                    모든 항목 ({{total}})
+                </button>
+                <button 
+                    :class="{active:filter ==='active'}"
+                    @click="changeFilter('active')">
+                    해야 할 항목 ({{activeCount}})
+                </button>
+                <button 
+                    :class="{active:filter ==='completed'}"
+                    @click="changeFilter('completed')">
+                    완료된 항목 ({{completedCount}})
+                </button>
+            </div>
+
+            <div class="actions">
+                <input 
+                    v-model="allDone"
+                    type="checkbox">
+                <button @click="clearCompleted">
+                    완료된 항목 삭제
+                </button>
+            </div>
+        </div>
+        <div class="todo-app__list">
+            <todo-item
+            v-for="todo in filteredTodos"
             :key="todo.id"
             :todo="todo"
             @update-todo="updateTodo"
             @delete-todo="deleteTodo"   
-        />
+            />
+        </div>
         <hr/>
         <!-- :todo="todo" :todo 란속성에 "todo" 란 데이터를 바인딩하여 props 로 전달 -->
-        <todo-creator @create-todo="createTodo"/>
+        <todo-creator 
+            class="todo-app__creator"
+            @create-todo="createTodo"/>
         <!-- @create-todo란 자식객체의 이벤트가 발생할때 createTodo 메서드가 실행된다  -->
     </div>
 </template>
@@ -28,11 +61,13 @@ import _cloneDeep from 'lodash/cloneDeep'
 //import _ from 'lodash'
 import _find from 'lodash/find'
 import _findIndex from 'lodash/findIndex'
+import _forEachRight from 'lodash/forEachRight'
 
 import _assign from 'lodash/assign'
 import _remove from 'lodash/remove'
 import TodoCreator from './TodoCreator'
 import TodoItem from './TodoItem'
+//import { filter } from 'vue/types/umd'
 
 export default {
     props:{
@@ -50,7 +85,39 @@ export default {
     data (){//로컬 DB 선언
         return {
             db:null,
-            todos:[]
+            todos:[],
+            filter:'all'
+        }
+    },
+    computed:{
+        filteredTodos(){
+            switch(this.filter){
+                case 'all':
+                    return this.todos
+                case 'active': //해야 할 항목
+                    return  this.todos.filter(todo => !todo.done)
+                case 'completed': // 완료된 항목
+                    return  this.todos.filter(todo => todo.done)
+                default:
+                    return this.todos
+            }
+        },
+        total(){
+            return this.todos.length
+        },
+        activeCount(){
+            return this.todos.filter(todo => !todo.done).length
+        },
+        completedCount(){
+            return this.total - this.activeCount
+        },
+        allDone:{
+            get(){
+                return this.total === this.completedCount && this.total > 0
+            },
+            set(checked){
+                this.completeAll(checked)
+            }
         }
     },
     created(){
@@ -117,7 +184,55 @@ export default {
             //삭제하기위해 Vue.delete(지울객체, 인덱스)사용
             const foundIndex = _findIndex(this.todos,{id:todo.id})
             this.$delete(this.todos,foundIndex)
+        },
+        changeFilter (filter){
+            this.filter = filter
+        },
+        completeAll(checked){
+            //디비 갱신
+            const newTodos = this.db
+                .get('todos')
+                .forEach(todo => {
+                    todo.done = checked
+                })
+                .write()
+            //Local todos 갱신
+            // this.todos.forEach(todo =>{
+            //     todo.done = checked
+            // })
+            this.todos = _cloneDeep(newTodos) //브라우저DB 사용하므로 참조문제 발생
+
+        },
+        clearCompleted(){
+            // this.todos.forEach(todo =>{
+            //     if(todo.done){
+            //         this.deleteTodo(todo)
+            //     }
+            // }) //배열삭제시 차례대로 삭제하면 배열의 인덱스때문에 정상적인 삭제가 안될수도 있다 - 1. 인덱스 끝부터 삭제 or 2. 라이브러리사용 
+            // 1. 배열 뒤에서부터 삭제
+            // this.todos
+            //     .reduce((list,todo,index)=>{
+            //         if(todo.done){//체크표시된 아이템들만
+            //             list.push(_findIndex)
+            //         }
+            //         return list
+            //     },[])
+            //     .reverse()
+            //     .forEach(index =>{
+            //         this.deleteTodo(this.todos[index])
+            //     })
+            // 2.로데시 라이브러리 사용
+            _forEachRight(this.todos, todo =>{
+                if(todo.done){
+                    this.deleteTodo(todo)
+                }
+            })
+
         }
     }
 }
 </script>
+
+<style lang='scss'>
+    @import "../scss/style";
+</style>
