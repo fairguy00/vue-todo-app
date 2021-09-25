@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import Home from '../views/Home.vue'//.vue 확장자 생략가능
-import About from '../views/About.vue'
-import TodoApp from '../views/TodoApp.vue'
+import Home from '~/views/Home.vue'//.vue 확장자 생략가능
+import About from '~/views/About.vue'
+import TodoApp from '~/views/TodoApp.vue'
 
 Vue.use(VueRouter)
 
