@@ -87,8 +87,8 @@ import _remove from 'lodash/remove'
 
 import scrollTo from  'scroll-to'//위로/아래로 가기 기능
 
-import TodoCreator from './TodoCreator'
-import TodoItem from './TodoItem'
+import TodoCreator from '~/components/TodoCreator'
+import TodoItem from '~/components/TodoItem'
 //import { filter } from 'vue/types/umd'
 
 export default {
@@ -268,5 +268,5 @@ export default {
 </script>
 
 <style lang='scss'>
-    @import "../scss/style";
+    @import "scss/style";
 </style>

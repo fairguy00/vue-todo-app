@@ -21,8 +21,12 @@ module.exports = (env, opts) => { //opts 개발용인지 제품용인지
 
     resolve: {//확장자생략
       extensions: [
-        '.vue', '.js'
-      ]
+        '.vue', '.js',
+      ],
+      alias: {
+        '~': path.join(__dirname), //절대경로 alias 설정
+        'scss': path.join(__dirname, './scss'),
+      }
     },
     entry: {
       //app: path.join(__dirname, 'main.js')//app - 별칭

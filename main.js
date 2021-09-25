@@ -2,6 +2,7 @@ import Vue from 'vue'
 //import App from './App.vue' //resolve: {//확장자생략
 import App from './App'
 // import {createApp} from 'vue'
+import router from './router/index.js' //index.js는 생략가능
 
 // export const eventBus = createApp(App)
 
@@ -9,6 +10,7 @@ import App from './App'
 //뷰인스턴스에 대한 설정
 new Vue({
   el: '#app',
+  router,
   //render (createElement) { //createElement 콜백함수
   //  return createElement(App)
   //}//아래두가지와 같다
