@@ -26,13 +26,34 @@
                 </button>
             </div>
 
-            <div class="actions">
-                <input 
-                    v-model="allDone"
-                    type="checkbox">
-                <button @click="clearCompleted">
-                    완료된 항목 삭제
-                </button>
+            <div class="actions clearfix">
+                <label class="float--left">
+                    <input 
+                        v-model="allDone"
+                        type="checkbox"/>
+                    <span class="icon">
+                        <i class="material-icons">done_all</i>
+                    </span>
+                </label>
+                <!-- 자식요소에 float 있으면 부모요소에 clearfix 있어야한다 -->
+                <div class="float--right clearfix">
+                    <button 
+                        class="btn float--left"
+                        @click="scrollToTop">
+                        <i class="material-icons">expand_less</i>
+                    </button>
+                    <button 
+                        class="btn float--left"
+                        @click="scrollToBottom">
+                        <i class="material-icons">expand_more</i>
+                    </button>
+                    <button 
+                        class="btn btn--danger float--left"
+                        @click="clearCompleted">
+                        <i class="material-icons">delete_sweep</i>
+                    </button>
+                </div>
+                
             </div>
         </div>
         <div class="todo-app__list">
@@ -44,7 +65,6 @@
             @delete-todo="deleteTodo"   
             />
         </div>
-        <hr/>
         <!-- :todo="todo" :todo 란속성에 "todo" 란 데이터를 바인딩하여 props 로 전달 -->
         <todo-creator 
             class="todo-app__creator"
@@ -62,9 +82,11 @@ import _cloneDeep from 'lodash/cloneDeep'
 import _find from 'lodash/find'
 import _findIndex from 'lodash/findIndex'
 import _forEachRight from 'lodash/forEachRight'
-
 import _assign from 'lodash/assign'
 import _remove from 'lodash/remove'
+
+import scrollTo from  'scroll-to'//위로/아래로 가기 기능
+
 import TodoCreator from './TodoCreator'
 import TodoItem from './TodoItem'
 //import { filter } from 'vue/types/umd'
@@ -228,6 +250,18 @@ export default {
                 }
             })
 
+        },
+        scrollToTop(){
+            scrollTo(0,0, {
+                ease:'linear',//없으면 올라가는속도가 점점 느려진다
+                duration:3000
+            })
+        },
+        scrollToBottom(){
+            scrollTo(0,document.body.scrollHeight, {
+                ease:'linear',//없으면 올라가는속도가 점점 느려진다 - linear -동일속도로
+                duration:3000
+            })
         }
     }
 }
