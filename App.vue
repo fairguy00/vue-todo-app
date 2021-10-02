@@ -1,6 +1,19 @@
 <template>
-  <router-view/>
+  <div>
+    <router-link 
+      to="/" 
+       class="to-home">
+      <i class="material-icons">home</i>
+    </router-link>
+     
+    <router-view/>
+  </div>
 </template>
+<style lang="scss">
+ .to-home.router-link-exact-active{//router-link 에서현재페이지 아닌지 확인
+   display: none;
+ }
+</style>
 <!-- 케밥케이스로 
   <!--todo-app>
 </template>
@@ -18,4 +31,5 @@
  view - 페이지단위 디렉터리로 옮겼기때문에 다른건 다 필요없다
  대신 main.js 에서 App.vue 파일을 가져와서 렌더링하기때문에 페이지로 만든것들이 출력될수있도록 작성되어야함
  <template> 여기엔 각각 출력될 영역들을 기입
+  <template> 에선 최상위 엘리먼트하나만 사용가능 
  -->
