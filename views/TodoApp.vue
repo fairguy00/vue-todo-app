@@ -9,21 +9,21 @@
     <div class="todo-app">
         <div class="todo-app__actions">
             <div class="filters">
-                <button 
-                    :class="{active:filter ==='all'}"
-                    @click="changeFilter('all')">
+                <router-link 
+                    to="all"
+                    tag="button">
                     모든 항목 ({{total}})
-                </button>
-                <button 
-                    :class="{active:filter ==='active'}"
-                    @click="changeFilter('active')">
+                </router-link>
+                <router-link
+                    to="active"
+                    tag="button">
                     해야 할 항목 ({{activeCount}})
-                </button>
-                <button 
-                    :class="{active:filter ==='completed'}"
-                    @click="changeFilter('completed')">
+                </router-link>
+                <router-link
+                    to="completed"
+                    tag="button">
                     완료된 항목 ({{completedCount}})
-                </button>
+                </router-link>
             </div>
 
             <div class="actions clearfix">
@@ -107,21 +107,19 @@ export default {
     data (){//로컬 DB 선언
         return {
             db:null,
-            todos:[],
-            filter:'all'
+            todos:[]
         }
     },
     computed:{
         filteredTodos(){
-            switch(this.filter){
+            switch(this.$route.params.id){
                 case 'all':
+                default:
                     return this.todos
                 case 'active': //해야 할 항목
                     return  this.todos.filter(todo => !todo.done)
                 case 'completed': // 완료된 항목
                     return  this.todos.filter(todo => todo.done)
-                default:
-                    return this.todos
             }
         },
         total(){
@@ -207,9 +205,6 @@ export default {
             const foundIndex = _findIndex(this.todos,{id:todo.id})
             this.$delete(this.todos,foundIndex)
         },
-        changeFilter (filter){
-            this.filter = filter
-        },
         completeAll(checked){
             //디비 갱신
             const newTodos = this.db
@@ -269,4 +264,8 @@ export default {
 
 <style lang='scss'>
     @import "scss/style";
+    .filters button.router-link-active{
+        background: royalblue;
+        color: white;
+    }
 </style>
