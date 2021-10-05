@@ -80,13 +80,13 @@ export default {
     props:{
         todo: Object
     },
-    data(){
+    data(){//해당 컴포넌트가 가지고 있는 데이터
         return{
             isEditMode: false,
             editedTitle: this.todo.title //수정하다가 취소하고 싶을경우 필요한 변수 todo.title 대신
         }
     },
-    computed:{
+    computed:{//데이터들을 계산해서 사용
         done:{ // done 이라는 컴퓨티드 데이터는 일반적으로 데이터를 가지고온 상태와 데이터가 수정되었을때 상태를 분기시켜줄수있다 
             get(){ //props에 있는 객체 todo를 가져온다
                 return this.todo.done
