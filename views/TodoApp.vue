@@ -104,12 +104,7 @@ export default {
         TodoCreator,
         TodoItem
     },
-    data (){//로컬 DB 선언
-        return {
-            db:null,
-            todos:[]
-        }
-    },
+
     computed:{
         filteredTodos(){
             switch(this.$route.params.id){
@@ -122,15 +117,7 @@ export default {
                     return  this.todos.filter(todo => todo.done)
             }
         },
-        total(){
-            return this.todos.length
-        },
-        activeCount(){
-            return this.todos.filter(todo => !todo.done).length
-        },
-        completedCount(){
-            return this.total - this.activeCount
-        },
+        
         allDone:{
             get(){
                 return this.total === this.completedCount && this.total > 0
@@ -144,25 +131,6 @@ export default {
         this.initDB()
     },
     methods:{
-        initDB (){ //메서드만 생성하고 실행을 안함 > create 훅으로 실행
-            const adaptor = new LocalStorage('todo-app')
-            this.db = lowdb(adaptor)
-            console.log(this.db)
-
-            const hasTodos = this.db.has('todos').value() //기존 lowdb 에 데이터있는지
-
-            if(hasTodos){
-                this.todos= _cloneDeep(this.db.getState().todos)//todos 안에 있는 참조관계 제거한 deep clone 깊은 복사
-            } else{
-                //로컬 DB 초기화
-                this.db
-                    .defaults({
-                        todos:[]// DB 의 Collection
-                    })
-                    .write()//lowdb 특징 작성하면 .write() 해줘야한다 - 메서드 체인으로
-            }
-            
-        },
         createTodo (title){
             //받아야할 데이터 정의
             const newTodo = {
