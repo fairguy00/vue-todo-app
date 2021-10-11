@@ -22,7 +22,7 @@ export default {
         }
     },
     actions: {
-        someAction1({state, getters, commit, dispatch },payload) { // 첫번째 인수 == context == state ,getters,mutation,actions를 아우르는 다양한 객체가 들어있음
+        someAction1({state, getters, commit, dispatch },payload) { // 첫번째 인수 == context == state ,getters,commit,dispatch를 아우르는 다양한 객체가 들어있음
             //state.a = 789 //수정은 뮤테이션만 error
             //state.b.push(payload) //수정은 뮤테이션만
             commit('someMutation', payload)//뮤테이션을 실행하게 도와주는 commit('뮤테이션이름',payload(전달할값) ) 가능

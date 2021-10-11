@@ -1,3 +1,8 @@
+import cryptoRandomString from "crypto-random-string";
+import lowdb from "lowdb";
+import LocalStorage from "lowdb/adapters/LocalStorage"; // lowdb 와 로컬스토리지 어댑터 필요
+import _find from "lodash/find";
+import _assign from "lodash/assign";
 export default {
     namespaced: true, // 독립적으로 사용하기
     // Data 
@@ -25,9 +30,31 @@ export default {
         assingDB(state,db) {
             state.db= db
         },
+        createDB(state, newTodo) {
+            // Create DB
+            state.db
+                .get('todos')//lodash
+                .push(newTodo) //lodash
+                .write()//lowdb
+            
+        },
+        updateDB(state, { todo, value}) {
+            state.db
+                .get("todos")
+                .find({ id: todo.id })
+                .assign(value) //갱신
+                .write(); //로대시에서 실제로 갱신할때 write로 마무리
+        },
         assignTodos(state, todos) {
             state.todos = todos
+        },
+        pushTodo(state, newTodo) {
+            state.todos.push(newTodo)
+        },
+        assignTodo(state, { foundTodo, value }) {
+            _assign(foundTodo, value)
         }
+
     },
     //Methods
     //일반 로직(비동기가능)
@@ -57,6 +84,35 @@ export default {
                     .write()//lowdb 특징 작성하면 .write() 해줘야한다 - 메서드 체인으로
             }
             
+        },
+        //createTodo (context, title){
+        createTodo ({state ,commit}, title){ //context 에서 특정한것들만 가져옴    
+            //받아야할 데이터 정의
+            const newTodo = {
+                id: cryptoRandomString({length:10}), //crypto random string lib 설치해서 고유한 아이디 생성 npm install crypto-random-string
+                //title:title, 아래와 같다
+                title,//title: title
+                createdAt:new Date(),
+                updatedAt:new Date(),
+                done: false
+            }
+            
+            // Create DB
+            commit('createDB',newTodo)
+            
+            // Create Client
+            commit('pushTodo', newTodo)
+        },
+        //updateTodo(context, todo, value) { 세번째 인수는 무시된다
+        // updateTodo(context, payload) {
+        //     const { todo, value} = payload
+        updateTodo({state,commit}, {todo, value }) {// 위코드와같다
+            //updateDB
+            commit('updateDB', {todo, value})
+            //실제 어플리캐이션의 todos도 갱신
+            const foundTodo = _find(state.todos, { id: todo.id });
+            //Object.assign(foundTodo, value); //자바스크립트 네이티브 메서드 Object.assign 로 병합
+            commit('assignTodo', {foundTodo, value})
         },
     },
     //Modules 는 저장소의 특정 네임스페이스들(TodoApp, Users, Ranks 등등) 을 분기처리하는 개념
