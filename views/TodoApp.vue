@@ -56,15 +56,6 @@
 </template>
 
 <script>
-import lowdb from "lowdb";
-import LocalStorage from "lowdb/adapters/LocalStorage"; // lowdb 와 로컬스토리지 어댑터 필요
-import cryptoRandomString from "crypto-random-string";
-import _cloneDeep from "lodash/cloneDeep";
-//import _ from 'lodash'
-import _find from "lodash/find";
-import _findIndex from "lodash/findIndex";
-import _forEachRight from "lodash/forEachRight";
-import _assign from "lodash/assign";
 import _remove from "lodash/remove";
 
 import scrollTo from "scroll-to"; //위로/아래로 가기 기능
@@ -112,63 +103,13 @@ export default {
   created() {
     this.initDB();
     //this.$store.dispatch('todoApp/updateTodo', todo, value)// 세번째 인수는 무시되므로 2번째 인수를 객체리터럴로
-    this.$store.dispatch('todoApp/updateTodo', {
-        todo,
-        value
-    })//VueX 스토어객체 actions에 접근 - dispatch('네임스페이스/엑션스의 메서드')
+    // this.$store.dispatch('todoApp/updateTodo', {
+    //     todo,
+    //     value
+    // })//VueX 스토어객체 actions에 접근 - dispatch('네임스페이스/엑션스의 메서드')
   },
   methods: {
-    
-    deleteTodo(todo) {
-      this.db
-        .get("todos")
-        .remove({ id: todo.id })
-        .write();
-
-      //_remove(this.todos, {id:todo.id})//이코드만 있으면 반응성이 없어 화면엔 갱신이 안된다
-      //삭제하기위해 Vue.delete(지울객체, 인덱스)사용
-      const foundIndex = _findIndex(this.todos, { id: todo.id });
-      this.$delete(this.todos, foundIndex);
-    },
-    completeAll(checked) {
-      //디비 갱신
-      const newTodos = this.db
-        .get("todos")
-        .forEach((todo) => {
-          todo.done = checked;
-        })
-        .write();
-      //Local todos 갱신
-      // this.todos.forEach(todo =>{
-      //     todo.done = checked
-      // })
-      this.todos = _cloneDeep(newTodos); //브라우저DB 사용하므로 참조문제 발생
-    },
-    clearCompleted() {
-      // this.todos.forEach(todo =>{
-      //     if(todo.done){
-      //         this.deleteTodo(todo)
-      //     }
-      // }) //배열삭제시 차례대로 삭제하면 배열의 인덱스때문에 정상적인 삭제가 안될수도 있다 - 1. 인덱스 끝부터 삭제 or 2. 라이브러리사용
-      // 1. 배열 뒤에서부터 삭제
-      // this.todos
-      //     .reduce((list,todo,index)=>{
-      //         if(todo.done){//체크표시된 아이템들만
-      //             list.push(_findIndex)
-      //         }
-      //         return list
-      //     },[])
-      //     .reverse()
-      //     .forEach(index =>{
-      //         this.deleteTodo(this.todos[index])
-      //     })
-      // 2.로데시 라이브러리 사용
-      _forEachRight(this.todos, (todo) => {
-        if (todo.done) {
-          this.deleteTodo(todo);
-        }
-      });
-    },
+  
     scrollToTop() {
       scrollTo(0, 0, {
         ease: "linear", //없으면 올라가는속도가 점점 느려진다

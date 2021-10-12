@@ -1,8 +1,15 @@
+import Vue from 'vue'
 import cryptoRandomString from "crypto-random-string";
 import lowdb from "lowdb";
 import LocalStorage from "lowdb/adapters/LocalStorage"; // lowdb 와 로컬스토리지 어댑터 필요
 import _find from "lodash/find";
 import _assign from "lodash/assign";
+
+import _cloneDeep from "lodash/cloneDeep";
+//import _ from 'lodash'
+import _findIndex from "lodash/findIndex";
+import _forEachRight from "lodash/forEachRight";
+
 export default {
     namespaced: true, // 독립적으로 사용하기
     // Data 
@@ -45,6 +52,12 @@ export default {
                 .assign(value) //갱신
                 .write(); //로대시에서 실제로 갱신할때 write로 마무리
         },
+        deleteDB(state, todo) {
+            state.db
+                .get("todos")
+                .remove({ id: todo.id })
+                .write();
+        },
         assignTodos(state, todos) {
             state.todos = todos
         },
@@ -53,7 +66,15 @@ export default {
         },
         assignTodo(state, { foundTodo, value }) {
             _assign(foundTodo, value)
-        }
+        },
+        deleteTodo(state, foundIndex) {
+            //this.$delete(state.todos, foundIndex);//뷰에서 제공한느 메서드 == Vue.delete
+            Vue.delete(state.todos, foundIndex)
+        },
+        updateTodo(state, { todo, key, value }) {//todo ==객체, key==갱신할프로퍼티이름,value 대체할 프로퍼티 값
+            //state 는 사용되진 않지만 첫번째인수가 있어야 해서
+            todo[key] =value   
+        },
 
     },
     //Methods
@@ -113,6 +134,61 @@ export default {
             const foundTodo = _find(state.todos, { id: todo.id });
             //Object.assign(foundTodo, value); //자바스크립트 네이티브 메서드 Object.assign 로 병합
             commit('assignTodo', {foundTodo, value})
+        },
+        deleteTodo({state,commit},todo) {
+            // Delete DB
+            commit('deleteDB', todo)
+
+            //_remove(this.todos, {id:todo.id})//이코드만 있으면 반응성이 없어 화면엔 갱신이 안된다
+            //삭제하기위해 Vue.delete(지울객체, 인덱스)사용
+            const foundIndex = _findIndex(state.todos, { id: todo.id });
+            
+            // Delete Client
+            commit('deleteTodo', foundIndex)
+
+        },
+        completeAll({state,commit},checked) {
+            // DB commit commit 은 리턴값을 받을수 없다
+            //디비 갱신
+            const newTodos = state.db
+                .get("todos")
+                .forEach((todo) => {
+                    //todo.done = checked
+                    commit('updateTodo', {
+                        todo,
+                        key: 'done',
+                        value: checked
+                        
+                    })
+                })
+                .write();
+            state.todos = _cloneDeep(newTodos); //브라우저DB 사용하므로 참조문제 발생
+        },
+        clearCompleted({state,dispatch}, todo) {
+            // this.todos.forEach(todo =>{
+            //     if(todo.done){
+            //         this.deleteTodo(todo)
+            //     }
+            // }) //배열삭제시 차례대로 삭제하면 배열의 인덱스때문에 정상적인 삭제가 안될수도 있다 - 1. 인덱스 끝부터 삭제 or 2. 라이브러리사용
+            // 1. 배열 뒤에서부터 삭제
+            // this.todos
+            //     .reduce((list,todo,index)=>{
+            //         if(todo.done){//체크표시된 아이템들만
+            //             list.push(_findIndex)
+            //         }
+            //         return list
+            //     },[])
+            //     .reverse()
+            //     .forEach(index =>{
+            //         this.deleteTodo(this.todos[index])
+            //     })
+            // 2.로데시 라이브러리 사용
+            _forEachRight(state.todos, (todo) => {
+                if (todo.done) {
+                    //state.deleteTodo(todo);
+                    dispatch('deleteTodo', todo)
+                }
+            });
         },
     },
     //Modules 는 저장소의 특정 네임스페이스들(TodoApp, Users, Ranks 등등) 을 분기처리하는 개념
