@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import {mapState, mapGetters} from 'vuex'
+import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
 import _remove from "lodash/remove";
 
 import scrollTo from "scroll-to"; //위로/아래로 가기 기능
@@ -82,6 +82,7 @@ export default {
 
   computed: {
     //네이티브 자바스크립트 스프레드 문법 ..전개연산자
+    //mapState,mapGetters 를 Helpers 라고 부른다
     ...mapState('todoApp',[//mapState('네임스페이스', [가지고오고싶은 데이터 이름들])
       'todos'
     ]),
@@ -117,7 +118,7 @@ export default {
     },
   },
   created() {
-    this.initDB();
+    this.initDB(); //메서드 initDB
     //this.$store.dispatch('todoApp/updateTodo', todo, value)// 세번째 인수는 무시되므로 2번째 인수를 객체리터럴로
     // this.$store.dispatch('todoApp/updateTodo', {
     //     todo,
@@ -125,7 +126,26 @@ export default {
     // })//VueX 스토어객체 actions에 접근 - dispatch('네임스페이스/엑션스의 메서드')
   },
   methods: {
-  
+    // ...mapMutations('todoApp',[
+    //   'updateTodo'
+    // ]),
+    ...mapActions('todoApp',[
+      'initDB',
+      'completeAll',
+      'clearCompleted'
+    ]),
+  //index.js 는 네임스페이스에 포함이 안됌
+    ...mapActions([
+      'testFunction'
+    ]),
+
+    //mapMutations , mapActions 로 아래를 처리함
+    // updateTodo(){
+    //   this.$store.commit('todoApp/updateTodo')
+    // },
+    // initDB(){
+    //   this.$store.dispatch('todoApp/initDB')
+    // },
     scrollToTop() {
       scrollTo(0, 0, {
         ease: "linear", //없으면 올라가는속도가 점점 느려진다
