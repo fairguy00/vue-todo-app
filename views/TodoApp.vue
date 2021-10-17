@@ -45,12 +45,11 @@
         v-for="todo in filteredTodos"
         :key="todo.id"
         :todo="todo"
-        @update-todo="updateTodo"
-        @delete-todo="deleteTodo"
       />
     </div>
     <!-- :todo="todo" :todo 란속성에 "todo" 란 데이터를 바인딩하여 props 로 전달 -->
-    <todo-creator class="todo-app__creator" @create-todo="createTodo" />
+    <todo-creator class="todo-app__creator"/>
+     <!-- @create-todo="createTodo"  -->
     <!-- @create-todo란 자식객체의 이벤트가 발생할때 createTodo 메서드가 실행된다  -->
   </div>
 </template>

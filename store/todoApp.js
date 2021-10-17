@@ -165,24 +165,6 @@ export default {
             state.todos = _cloneDeep(newTodos); //브라우저DB 사용하므로 참조문제 발생
         },
         clearCompleted({state,dispatch}, todo) {
-            // this.todos.forEach(todo =>{
-            //     if(todo.done){
-            //         this.deleteTodo(todo)
-            //     }
-            // }) //배열삭제시 차례대로 삭제하면 배열의 인덱스때문에 정상적인 삭제가 안될수도 있다 - 1. 인덱스 끝부터 삭제 or 2. 라이브러리사용
-            // 1. 배열 뒤에서부터 삭제
-            // this.todos
-            //     .reduce((list,todo,index)=>{
-            //         if(todo.done){//체크표시된 아이템들만
-            //             list.push(_findIndex)
-            //         }
-            //         return list
-            //     },[])
-            //     .reverse()
-            //     .forEach(index =>{
-            //         this.deleteTodo(this.todos[index])
-            //     })
-            // 2.로데시 라이브러리 사용
             _forEachRight(state.todos, (todo) => {
                 if (todo.done) {
                     //state.deleteTodo(todo);

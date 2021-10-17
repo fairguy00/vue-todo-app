@@ -133,10 +133,15 @@ export default {
             this.isEditMode = false
         },
         updateTodo(value){ //특정값을 받아 부모컴포넌트인 todoapp로 넘겨준다- $emit 상위컴포넌트에 있는 메서드르리 실행하기위한('이벤트이름', 부모로 올라갈데이터, 갱신할값)
-            this.$emit('update-todo', this.todo, value)
+            //this.$emit('update-todo', this.todo, value)
+            this.$store.dispatch('todoApp/updateTodo', {
+                todo:this.todo,
+                value
+            })
         },
         deleteTodo(){//상위컴포넌트를 통해서 delete-todo 이벤트 이름으로 this.todo와 같이 데이터로 로 올려줌
-            this.$emit('delete-todo',this.todo)
+            //this.$emit('delete-todo',this.todo)
+            this.$store.dispatch('todoApp/deleteTodo', this.todo)
         }
     }
 }

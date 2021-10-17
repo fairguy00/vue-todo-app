@@ -33,7 +33,8 @@ export default {
             }
 
             console.log(this.title)
-            this.$emit('create-todo',this.title)//부모컴포넌트에 특정이벤트를 올려줌 케밥케이스
+            //this.$emit('create-todo',this.title)//부모컴포넌트에 특정이벤트를 올려줌 케밥케이스
+            this.$store.dispatch('todoApp/createTodo', this.title)
             this.title=''
             this.$nextTick(()=>{
                 window.scrollTo(0, document.body.scrollHeight)//scrollTo(x축,y축) 으로 이동 - 스크롤할수있는 높이로
