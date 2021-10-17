@@ -4,11 +4,13 @@
          - npm i lodash@^4 lowdb@^1 
     -->
   <!-- 브라우저 session storage 브라우저 종료하면 날아가는 일시적인-->
-  <!-- 템플릿태그안에는 자식요소가하나만 들어강 -->
+  <!-- 템플릿태그안에는 자식요소가하나만 들어가고 this 사용안한다 -->
+  <!-- $store.getters.todoApp 스토어의 todoApp 라는 네임스페이스값을 가져온다 -->
   <div class="todo-app">
     <div class="todo-app__actions">
       <div class="filters">
         <router-link to="all" tag="button">
+          <!-- 모든 항목 ({{ $store.getters.todoApp.total }}) -->
           모든 항목 ({{ total }})
         </router-link>
         <router-link to="active" tag="button">
@@ -55,6 +57,7 @@
 </template>
 
 <script>
+import {mapState, mapGetters} from 'vuex'
 import _remove from "lodash/remove";
 
 import scrollTo from "scroll-to"; //위로/아래로 가기 기능
@@ -78,18 +81,32 @@ export default {
   },
 
   computed: {
+    //네이티브 자바스크립트 스프레드 문법 ..전개연산자
+    ...mapState('todoApp',[//mapState('네임스페이스', [가지고오고싶은 데이터 이름들])
+      'todos'
+    ]),
+    ...mapGetters('todoApp',[
+      'total',
+      'activeCount',
+      'completedCount'
+    ]),
     filteredTodos() {
       switch (this.$route.params.id) {
         case "all":
         default:
-          return this.todos;
+          return this.todos;//mapState 'todos'
         case "active": //해야 할 항목
           return this.todos.filter((todo) => !todo.done);
         case "completed": // 완료된 항목
           return this.todos.filter((todo) => todo.done);
       }
     },
-
+    // total(){ // mapGetters로 처리해버림
+    //   return this.$store.getters.todoApp.total
+    // },
+    // activeCount(){
+    //   return this.$store.getters.todoApp.activeCount
+    // },
     allDone: {
       get() {
         return this.total === this.completedCount && this.total > 0;
