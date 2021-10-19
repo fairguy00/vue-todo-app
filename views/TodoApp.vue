@@ -87,21 +87,11 @@ export default {
       'todos'
     ]),
     ...mapGetters('todoApp',[
+      'filteredTodos',
       'total',
       'activeCount',
       'completedCount'
     ]),
-    filteredTodos() {
-      switch (this.$route.params.id) {
-        case "all":
-        default:
-          return this.todos;//mapState 'todos'
-        case "active": //해야 할 항목
-          return this.todos.filter((todo) => !todo.done);
-        case "completed": // 완료된 항목
-          return this.todos.filter((todo) => todo.done);
-      }
-    },
     // total(){ // mapGetters로 처리해버림
     //   return this.$store.getters.todoApp.total
     // },
@@ -117,6 +107,14 @@ export default {
       },
     },
   },
+  watch:{//특정데이터를 관찰하고있다가 변경되면 함수실행
+    $route(){
+      //state.filter = this.$route.params.id //스토어 데이터를 스토어 내부가아닌 외부에서 직접 변경은 안된다
+      //store 의 mutation 이용
+      //this.$store.commit('todoApp/updateFilter',this.$route.params.id) //이상없으나 helpers 이용하여 코드대체
+      this.updateFilter(this.$route.params.id)
+    }
+  },
   created() {
     this.initDB(); //메서드 initDB
     //this.$store.dispatch('todoApp/updateTodo', todo, value)// 세번째 인수는 무시되므로 2번째 인수를 객체리터럴로
@@ -129,6 +127,9 @@ export default {
     // ...mapMutations('todoApp',[
     //   'updateTodo'
     // ]),
+    ...mapMutation('todoApp',[
+      'updateFilter'
+    ]),
     ...mapActions('todoApp',[
       'initDB',
       'completeAll',

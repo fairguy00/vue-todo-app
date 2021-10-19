@@ -16,10 +16,22 @@ export default {
     //Data 는 함수여야 한다 - 특정객체를 리터럴방식으로 return 해야한다 - 그래야 참조관계가 발생하지않는다
     state: ()=>({ //state 는 객체 데이터를 반환한다
         db:null,//로컬 DB 선언
-        todos:[]
+        todos: [],
+        fliter: 'all'
     }),
     // Computed
     getters: {
+        filteredTodos(state) {
+            switch (state.filter) {
+                case "all":
+                default:
+                    return state.todos;//mapState 'todos'
+                case "active": //해야 할 항목
+                    return state.todos.filter((todo) => !todo.done);
+                case "completed": // 완료된 항목
+                    return state.todos.filter((todo) => todo.done);
+            }
+        },
         total(state){
             return state.todos.length
         },
@@ -75,7 +87,9 @@ export default {
             //state 는 사용되진 않지만 첫번째인수가 있어야 해서
             todo[key] =value   
         },
-
+        updateFilter(state, filter) {
+            state.filter = filter
+        },
     },
     //Methods
     //일반 로직(비동기가능)
