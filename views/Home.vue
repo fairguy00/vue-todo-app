@@ -9,13 +9,13 @@
                 About
             </h2>
             <!--ROUTE 방법1 <h2 @click="toTodoApp"> -->
-            <!--ROUTE 방법1 <h2 @click="$router.push('/todos')">                
+            <!--ROUTE 방법1 <h2 @click="$router.push('/todos')">
                 Todo App
             </h2> -->
             <!-- ROUTE 방법3 -->
             <router-link to="todos" tag="h2">
                 Todo App
-            </router-link> 
+            </router-link>
         </div>
     </section>
 </template>
@@ -31,6 +31,6 @@
 //             $router.push('todos')
 //         }
 //     },
-    
+
 // }
 </script>

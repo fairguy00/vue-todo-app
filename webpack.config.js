@@ -21,11 +21,11 @@ module.exports = (env, opts) => { //opts 개발용인지 제품용인지
 
     resolve: {//확장자생략
       extensions: [
-        '.vue', '.js',
+        '.vue', '.js'
       ],
       alias: {
         '~': path.join(__dirname), //절대경로 alias 설정
-        'scss': path.join(__dirname, './scss'),
+        'scss': path.join(__dirname, './scss')
       }
     },
     entry: {
@@ -89,11 +89,11 @@ module.exports = (env, opts) => { //opts 개발용인지 제품용인지
         template: path.join(__dirname, 'index.html')
       }),
       new CopyPlugin([
-          {
-            from: 'assets/', //이플러그인은 특정 디렉터리 파일들을 어딘가 넣어주는 역할
-            to: ''
-          }
-        ]
+        {
+          from: 'assets/', //이플러그인은 특정 디렉터리 파일들을 어딘가 넣어주는 역할
+          to: ''
+        }
+      ]
       )
 
     ]

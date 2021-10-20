@@ -1,7 +1,7 @@
 <template>
-  <!-- 브라우저 local storage -- 쿠키삭제 같은게 아닌 반영구적인 저장소 
+  <!-- 브라우저 local storage -- 쿠키삭제 같은게 아닌 반영구적인 저장소
          - Lowdb 라이브러리로 활용 lodash lib(배열,객체, 문자열 다루는 lib) 딸려들어옴
-         - npm i lodash@^4 lowdb@^1 
+         - npm i lodash@^4 lowdb@^1
     -->
   <!-- 브라우저 session storage 브라우저 종료하면 날아가는 일시적인-->
   <!-- 템플릿태그안에는 자식요소가하나만 들어가고 this 사용안한다 -->
@@ -57,18 +57,18 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapMutations, mapActions} from 'vuex'
-import _remove from "lodash/remove";
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+//import _remove from 'lodash/remove'
 
-import scrollTo from "scroll-to"; //위로/아래로 가기 기능
+import scrollTo from 'scroll-to' //위로/아래로 가기 기능
 
-import TodoCreator from "~/components/TodoCreator";
-import TodoItem from "~/components/TodoItem";
+import TodoCreator from '~/components/TodoCreator'
+import TodoItem from '~/components/TodoItem'
 //import { filter } from 'vue/types/umd'
 
 export default {
   props: {
-    todo: Object,
+    todo: Object
   },
   // data(){
   //     return{
@@ -77,16 +77,16 @@ export default {
   // },
   components: {
     TodoCreator,
-    TodoItem,
+    TodoItem
   },
 
   computed: {
     //네이티브 자바스크립트 스프레드 문법 ..전개연산자
     //mapState,mapGetters 를 Helpers 라고 부른다
-    ...mapState('todoApp',[//mapState('네임스페이스', [가지고오고싶은 데이터 이름들])
+    ...mapState('todoApp', [//mapState('네임스페이스', [가지고오고싶은 데이터 이름들])
       'todos'
     ]),
-    ...mapGetters('todoApp',[
+    ...mapGetters('todoApp', [
       'filteredTodos',
       'total',
       'activeCount',
@@ -99,24 +99,24 @@ export default {
     //   return this.$store.getters.todoApp.activeCount
     // },
     allDone: {
-      get() {
-        return this.total === this.completedCount && this.total > 0;
+      get () {
+        return this.total === this.completedCount && this.total > 0
       },
-      set(checked) {
-        this.completeAll(checked);
-      },
-    },
+      set (checked) {
+        this.completeAll(checked)
+      }
+    }
   },
-  watch:{//특정데이터를 관찰하고있다가 변경되면 함수실행
-    $route(){
+  watch: {//특정데이터를 관찰하고있다가 변경되면 함수실행
+    $route () {
       //state.filter = this.$route.params.id //스토어 데이터를 스토어 내부가아닌 외부에서 직접 변경은 안된다
       //store 의 mutation 이용
       //this.$store.commit('todoApp/updateFilter',this.$route.params.id) //이상없으나 helpers 이용하여 코드대체
       this.updateFilter(this.$route.params.id)
     }
   },
-  created() {
-    this.initDB(); //메서드 initDB
+  created () {
+    this.initDB() //메서드 initDB
     //this.$store.dispatch('todoApp/updateTodo', todo, value)// 세번째 인수는 무시되므로 2번째 인수를 객체리터럴로
     // this.$store.dispatch('todoApp/updateTodo', {
     //     todo,
@@ -127,18 +127,18 @@ export default {
     // ...mapMutations('todoApp',[
     //   'updateTodo'
     // ]),
-    ...mapMutation('todoApp',[
+    ...mapMutations('todoApp', [
       'updateFilter'
     ]),
-    ...mapActions('todoApp',[
+    ...mapActions('todoApp', [
       'initDB',
       'completeAll',
       'clearCompleted'
     ]),
-  //index.js 는 네임스페이스에 포함이 안됌
-    ...mapActions([
-      'testFunction'
-    ]),
+    //index.js 는 네임스페이스에 포함이 안됌
+    // ...mapActions([
+    //   'testFunction'
+    // ]),
 
     //mapMutations , mapActions 로 아래를 처리함
     // updateTodo(){
@@ -147,20 +147,20 @@ export default {
     // initDB(){
     //   this.$store.dispatch('todoApp/initDB')
     // },
-    scrollToTop() {
+    scrollToTop () {
       scrollTo(0, 0, {
-        ease: "linear", //없으면 올라가는속도가 점점 느려진다
-        duration: 3000,
-      });
+        ease: 'linear', //없으면 올라가는속도가 점점 느려진다
+        duration: 3000
+      })
     },
-    scrollToBottom() {
+    scrollToBottom () {
       scrollTo(0, document.body.scrollHeight, {
-        ease: "linear", //없으면 올라가는속도가 점점 느려진다 - linear -동일속도로
-        duration: 3000,
-      });
-    },
-  },
-};
+        ease: 'linear', //없으면 올라가는속도가 점점 느려진다 - linear -동일속도로
+        duration: 3000
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss">
